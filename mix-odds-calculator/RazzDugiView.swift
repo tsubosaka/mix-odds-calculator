@@ -43,7 +43,7 @@ struct RazzDugiView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             }
             Button(action: {
-                razzModel.calculateOdds(hand1: hand1, hand2: hand2, hand3: hand3, deadCard: dead)
+                razzModel.calculateOdds(hand1: hand1, hand2: hand2, hand3: hand3, deadCard: dead, numberOfSimulations: 1000)
             }){
                 Text("計算")
             }.alert(isPresented: $razzModel.isError){
@@ -79,7 +79,7 @@ struct RazzDugiView: View {
                 }
                 Group{
                     HStack{
-                        Text("1000回シミュレーション結果")
+                        Text(String(razzModel.simulationNum) + "回シミュレーション結果")
                         Spacer()
                     }
                     HStack{

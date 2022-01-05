@@ -86,3 +86,140 @@ public func judgeAceToFiveLow(cards: [PlayingCard]) -> Hand{
     }
     return Hand(handRank: numArr[4], handValue: calcHandValue(nums: numArr))
 }
+
+public func judge27(cards: [PlayingCard]) -> Hand{
+    return judgePokerHand(cards: cards, aceCanBeOne: false)
+}
+
+public func judgePokerHand(cards: [PlayingCard], aceCanBeOne : Bool) -> Hand{
+    var numArr : [Int] = []
+    for card in cards{
+        numArr.append(card.number)
+    }
+    numArr.sort()
+    if isFlush(cards: cards){
+        if numArr[4] - numArr[0] == 4{
+            // straight flush
+            return Hand(handRank: HandRank.straightFlush.rawValue, handValue: numArr[4])
+        }else{
+            if(aceCanBeOne){
+                if(numArr[4] == 14 && numArr[3] == 5){
+                    return Hand(handRank: HandRank.straightFlush.rawValue, handValue: 5)
+                }
+            }
+            // flush
+            return Hand(handRank: HandRank.flush.rawValue, handValue: calcHandValue(nums: numArr))
+        }
+    }
+    // pairかどうかの判定
+    if hasPair(nums: numArr){
+        return judgePairHand(nums: numArr)
+    }
+    // straightかどうかの判定
+    if numArr[4] - numArr[0] == 4{
+        return Hand(handRank: HandRank.straight.rawValue, handValue: numArr[4])
+    }
+    if(aceCanBeOne){
+        if(numArr[4] == 14 && numArr[3] == 5){
+            return Hand(handRank: HandRank.straight.rawValue, handValue: 5)
+        }
+    }
+    return Hand(handRank: numArr[4], handValue: calcHandValue(nums: numArr))
+}
+
+// judge hand for badugi
+private func judgeTri(triCards: [PlayingCard]) -> Hand?{
+    if(triCards[0].suit == triCards[1].suit
+       || triCards[0].suit == triCards[2].suit
+       || triCards[1].suit == triCards[2].suit){
+        return nil
+    }
+    if(triCards[0].number == triCards[1].number
+       || triCards[0].number == triCards[2].number
+       || triCards[1].number == triCards[2].number){
+        return nil
+    }
+    var nums: [Int] = []
+    for card in triCards{
+        let cardNum = card.number == 14 ? 1 : card.number
+        nums.append(cardNum)
+    }
+    nums.sort()
+    return Hand(handRank: 1, handValue: calcHandValue(nums: nums))
+}
+
+private func updateTri(bestHand: Hand?, candHand: Hand?) -> Hand?{
+    if(bestHand == nil){
+        return candHand
+    }
+    if(candHand == nil){
+        return bestHand
+    }
+    if(bestHand!.handValue > candHand!.handValue){
+        return candHand
+    }
+    return bestHand
+}
+
+public func judgeBadugi(cards: [PlayingCard]) -> Hand{
+    var suitValueArr = Array(repeating: 0, count: 4)
+    for card in cards{
+        let cardNum = card.number == 14 ? 1 : card.number
+        switch card.suit{
+        case Suit.spade:
+            suitValueArr[0] = cardNum
+        case Suit.heart:
+            suitValueArr[1] = cardNum
+        case Suit.diamond:
+            suitValueArr[2] = cardNum
+        case Suit.club:
+            suitValueArr[3] = cardNum
+        }
+    }
+    suitValueArr.sort()
+    if suitValueArr[0] != 0 && (!hasPair(nums: suitValueArr)){
+        // Badugi
+        return Hand(handRank: 0, handValue: calcHandValue(nums: suitValueArr))
+    }
+    // tri check
+    var bestTri: Hand? = nil
+    bestTri = updateTri(bestHand: bestTri, candHand: judgeTri(triCards: [cards[0], cards[1], cards[2]]))
+    bestTri = updateTri(bestHand: bestTri, candHand: judgeTri(triCards: [cards[0], cards[1], cards[3]]))
+    bestTri = updateTri(bestHand: bestTri, candHand: judgeTri(triCards: [cards[0], cards[2], cards[3]]))
+    bestTri = updateTri(bestHand: bestTri, candHand: judgeTri(triCards: [cards[1], cards[2], cards[3]]))
+    if(bestTri != nil){
+        return bestTri!
+    }
+    var bestPair: Hand? = nil
+    for i in 0...3{
+        for j in 0...3{
+            if(cards[i].suit == cards[j].suit){
+                continue
+            }
+            if(cards[i].number == cards[j].number){
+                continue
+            }
+            var ni = cards[i].number
+            var nj = cards[j].number
+            ni = ni == 14 ? 1 : ni
+            nj = nj == 14 ? 1 : nj
+            if(nj >= ni){
+                continue
+            }
+            let handValue = calcHandValue(nums: [ni, nj])
+            bestPair = updateTri(bestHand: bestPair, candHand: Hand(handRank: 2, handValue: handValue))
+        }
+    }
+    if(bestPair != nil){
+        return bestPair!
+    }
+    var minValue = 14
+    for card in cards{
+        if card.number == 14{
+            minValue = 1
+            break
+        }
+        minValue = min(minValue, card.number)
+    }
+    return Hand(handRank: 3, handValue: minValue)
+}

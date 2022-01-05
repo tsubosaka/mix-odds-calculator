@@ -43,7 +43,7 @@ struct DeuceSevenRazzView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             }
             Button(action: {
-                razzModel.calculateOdds(hand1: hand1, hand2: hand2, hand3: hand3, deadCard: dead, numberOfSimulations: 300)
+                razzModel.calculateOdds(hand1: hand1, hand2: hand2, hand3: hand3, deadCard: dead, numberOfSimulations: 1000)
             }){
                 Text("計算")
             }.alert(isPresented: $razzModel.isError){
@@ -51,63 +51,7 @@ struct DeuceSevenRazzView: View {
                       dismissButton: .default(Text("OK")))
             }
             if(razzModel.isCalculated){
-                Group{
-                    HStack{
-                        Text("Player1 Hand")
-                        Spacer()
-                    }
-                    HStack{
-                        Text(razzModel.player_hand1)
-                        Spacer()
-                    }
-                    HStack{
-                        Text("Player2 Hand")
-                        Spacer()
-                    }
-                    HStack{
-                        Text(razzModel.player_hand2)
-                        Spacer()
-                    }
-                    HStack{
-                        Text("Dead Hand")
-                        Spacer()
-                    }
-                    HStack{
-                        Text(razzModel.dead_hand)
-                        Spacer()
-                    }
-                }
-                Group{
-                    HStack{
-                        Text(String(razzModel.simulationNum) + "回シミュレーション結果")
-                        Spacer()
-                    }
-                    HStack{
-                        Text("Player1 勝利回数")
-                        Spacer()
-                    }
-                    HStack{
-                        Text(String(razzModel.win1))
-                        Spacer()
-                    }
-                    HStack{
-                        Text("Player2 勝利回数")
-                        Spacer()
-                    }
-                    HStack{
-                        Text(String(razzModel.win2))
-                        Spacer()
-                    }
-                    HStack{
-                        Text("tie回数")
-                        Spacer()
-                    }
-                    HStack{
-                        Text(String(razzModel.tie12))
-                        Spacer()
-                    }
-
-                }
+                DeuceSevenRazzResultView(razzModel: razzModel)
             }
         }
         .padding()

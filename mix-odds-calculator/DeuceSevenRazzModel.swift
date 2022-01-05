@@ -39,8 +39,8 @@ public class DeuceSevenRazzModel: StudTypeModel {
         tie_player_2 = 0
     }
     override func judgeResult(player1_cards: [PlayingCard], player2_cards: [PlayingCard]){
-        let player1_hand : Hand = judgeHand27(cards: player1_cards)
-        let player2_hand : Hand = judgeHand27(cards: player2_cards)
+        let player1_hand : Hand = judgeHandRazzType(cards: player1_cards, judgeMethod: judge27, useCardNum: 5)
+        let player2_hand : Hand = judgeHandRazzType(cards: player2_cards, judgeMethod: judge27, useCardNum: 5)
         let value = judge(hand1: player1_hand, hand2: player2_hand)
         if value == 1{
             win_player_1 += 1
