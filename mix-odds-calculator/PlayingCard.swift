@@ -97,7 +97,7 @@ public func judgeHandOmahaType(board: [PlayingCard], holeCard: [PlayingCard],
                                judgeMethod: (([PlayingCard]) -> Hand), bestlow: Bool) -> Hand{
     var bestHand : Hand = bestlow ? Hand(handRank: HandRank.straightFlush.rawValue + 1, handValue: 0) : Hand(handRank: 0, handValue: 0)
     for boardComb in board.combinations(ofCount: 3){
-        for holeComb in board.combinations(ofCount: 2){
+        for holeComb in holeCard.combinations(ofCount: 2){
             let cards = boardComb + holeComb
             let hand = judgeMethod(cards)
             if(bestlow){

@@ -83,7 +83,7 @@ public class RazzDugiModel: StudTypeModel {
         win2_badugi = win_player_2_badugi
         tie1_badugi = tie_player_1_badugi
         tie1_razz = tie_player_1_razz
-        let exp_value = Double(win1_razz - win2_razz + win1_badugi - win2_badugi) / 2000.0
+        let exp_value = Double(win1_razz - win2_razz + win1_badugi - win2_badugi) / Double(simulationNum * 2)
         exp_player1 = exp_value
     }
 }

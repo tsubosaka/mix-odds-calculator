@@ -91,6 +91,10 @@ public func judge27(cards: [PlayingCard]) -> Hand{
     return judgePokerHand(cards: cards, aceCanBeOne: false)
 }
 
+public func judgePokerHigh(cards: [PlayingCard]) -> Hand{
+    return judgePokerHand(cards: cards, aceCanBeOne: true)
+}
+
 public func judgePokerHand(cards: [PlayingCard], aceCanBeOne : Bool) -> Hand{
     var numArr : [Int] = []
     for card in cards{

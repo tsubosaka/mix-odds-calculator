@@ -17,7 +17,9 @@ struct ContentView: View {
                 NavigationLink(destination: RazzDugiView()){
                     Text("Razz dugi").font(.title)
                 }
-
+                NavigationLink(destination: OmahaTwoBoadHighLowView()){
+                    Text("Omaha Hi/Lo best/best").font(.title)
+                }
             }.navigationTitle(Text("Mix Game odds calculator"))
         }
     }
