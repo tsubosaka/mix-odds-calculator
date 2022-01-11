@@ -79,15 +79,24 @@ public func parseCard(card : String) -> PlayingCard?{
     return PlayingCard(suit: suit, number: cardNumber)
 }
 
-public func judgeHandRazzType(cards: [PlayingCard], judgeMethod: (([PlayingCard]) -> Hand), useCardNum: Int) -> Hand{
-    var bestHand : Hand = Hand(handRank: HandRank.straightFlush.rawValue + 1, handValue: 0)
+public func judgeHandRazzType(cards: [PlayingCard], judgeMethod: (([PlayingCard]) -> Hand), useCardNum: Int, bestlow: Bool = true) -> Hand{
+    var bestHand : Hand = bestlow ? Hand(handRank: HandRank.straightFlush.rawValue + 1, handValue: 0) : Hand(handRank: 0, handValue: 0)
     for cardComb in cards.combinations(ofCount: useCardNum){
         let hand = judgeMethod(cardComb)
-        if hand.handRank < bestHand.handRank{
-            bestHand.handRank = hand.handRank
-            bestHand.handValue = hand.handValue
-        }else if hand.handRank == bestHand.handRank{
-            bestHand.handValue = min(bestHand.handValue, hand.handValue)
+        if(bestlow){
+            if hand.handRank < bestHand.handRank{
+                bestHand.handRank = hand.handRank
+                bestHand.handValue = hand.handValue
+            }else if hand.handRank == bestHand.handRank{
+                bestHand.handValue = min(bestHand.handValue, hand.handValue)
+            }
+        }else{
+            if hand.handRank > bestHand.handRank{
+                bestHand.handRank = hand.handRank
+                bestHand.handValue = hand.handValue
+            }else if hand.handRank == bestHand.handRank{
+                bestHand.handValue = max(bestHand.handValue, hand.handValue)
+            }
         }
     }
     return bestHand

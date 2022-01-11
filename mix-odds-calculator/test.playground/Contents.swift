@@ -1,3 +1,7 @@
-
-var model = DeuceSevenRazzModel()
-model.calculateOdds(hand1: "2c 3h 7s Jh Jd 5d", hand2: "2h 5s 6s Qh Kh 3c", hand3: "", deadCard: "")
+import Foundation
+let start = Date()
+var model = Stud30Model()
+model.calculateOdds(hand1: "Td Tc 2c 3h", hand2: "7h 7s 7c 7d", hand3: "", deadCard: "Th",
+                    numberOfSimulations: 1000)
+let elapsed = Date().timeIntervalSince(start)
+print(elapsed)

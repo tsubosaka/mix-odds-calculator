@@ -116,6 +116,8 @@ public class OmahaTwoBoardModel: ObservableObject {
         }
         player_card1 = hand1
         player_card2 = hand2
+        self.board1 = board1
+        self.board2 = board2
         dead_card = deadCard
         simulationNum = numberOfSimulations
         updateResult()
