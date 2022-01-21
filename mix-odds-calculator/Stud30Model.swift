@@ -93,8 +93,8 @@ public class Stud30Model: StudTypeModel {
         win2_high = win_player_2_high
         win1_30 = win_player_1_30
         win2_30 = win_player_2_30
-        tie1_high = tie_player_1_30
-        tie1_30 = tie_player_1_high
+        tie1_high = tie_player_1_high
+        tie1_30 = tie_player_1_30
         let exp_value = Double(win1_high - win2_high + win1_30 - win2_30) / Double(simulationNum * 2)
         exp_player1 = exp_value
     }
