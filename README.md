@@ -22,3 +22,9 @@
 * Razz
 * Stud Hi/Lo
 * Big O
+
+## 画面例
+
+![2-7Razz Sample](image/2_7razz_sample.png)
+
+![Double board Omaha Sample](image/Doubleboard_omaha_sample.png)
