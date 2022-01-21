@@ -1,4 +1,4 @@
-#mix-odds-calculator
+# mix-odds-calculator
 
 ポーカーのマイナーなmix gameの勝率計算アプリ
 現状勝率計算はUI上は3人入力可能であるが、ヘッズアップのみの対応となっている

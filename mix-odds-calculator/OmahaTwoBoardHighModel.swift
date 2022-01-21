@@ -66,7 +66,7 @@ public class OmahaTwoBoardModelHigh: OmahaTwoBoardModel {
         }
         if judge_high_2 == 1{
             win1_high2_num += 1
-        }else if judge_high_1 == -1{
+        }else if judge_high_2 == -1{
             win2_high2_num += 1
         }else{
             tie_high2_num += 1
