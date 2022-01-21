@@ -20,6 +20,9 @@ struct ContentView: View {
                 NavigationLink(destination: Stud30View()){
                     Text("Stud30").font(.title)
                 }
+                NavigationLink(destination: OmahaTwoBoadHighView()){
+                    Text("Omaha Double Board").font(.title)
+                }
                 NavigationLink(destination: OmahaTwoBoadHighLowView()){
                     Text("Omaha Hi/Lo best/best").font(.title)
                 }
