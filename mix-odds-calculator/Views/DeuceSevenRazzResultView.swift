@@ -42,7 +42,7 @@ struct DeuceSevenRazzResultView: View {
         }
         Group{
             HStack{
-                Text(String(razzModel.simulationNum) + "回シミュレーション結果")
+                Text(String(razzModel.simulationNum) + "回シミュレーション結果" + String(razzModel.elapseTime))
                 Spacer()
             }
             HStack{

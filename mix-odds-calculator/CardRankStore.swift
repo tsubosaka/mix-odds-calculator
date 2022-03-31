@@ -14,14 +14,24 @@ final public class CardRankStore{
     private var cardPrimes = [0, 0, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41]
     private var pokerHandDictNoFlash : Dictionary<Int, Hand>
     private var pokerHandDictFlash : Dictionary<Int, Hand>
+    private var pokerHandDictRazz : Dictionary<Int, Hand>
+
     public static let shared = CardRankStore()
 
     private init(){
         pokerHandDictNoFlash = [:]
         pokerHandDictFlash = [:]
+        pokerHandDictRazz = [:]
         makeHandRankDict()
+//        makeHandRankDictRazz()
     }
-    private func makeHandRankDict(){
+    private func aceToOne(_ number: Int) -> Int{
+        if(number == 14){
+            return 1
+        }
+        return number
+    }
+    private func makeHandRankDictPair(handDict: inout Dictionary<Int,Hand>, isAceOne: Bool){
         // quads
         for i in 2...14{
             var quadVal = cardPrimes[i]
@@ -30,8 +40,14 @@ final public class CardRankStore{
                 if(i == kicker){
                     continue
                 }
-                let hv = i * 100 + kicker
-                pokerHandDictNoFlash[quadVal * cardPrimes[kicker]] = Hand(handRank: HandRank.quads.rawValue, handValue: hv)
+                let hind = quadVal * cardPrimes[kicker]
+                if(isAceOne && i == 14){
+                    let hv = aceToOne(i) * 100 + kicker
+                    handDict[hind] = Hand(handRank: HandRank.quads.rawValue, handValue: hv)
+                }else{
+                    let hv = i * 100 + kicker
+                    handDict[hind] = Hand(handRank: HandRank.quads.rawValue, handValue: hv)
+                }
             }
         }
         // trips
@@ -44,8 +60,13 @@ final public class CardRankStore{
                     continue
                 }
                 let pairVal = cardPrimes[pair_v] * cardPrimes[pair_v]
-                let handVal = tripVal * pairVal
-                pokerHandDictNoFlash[handVal] = Hand(handRank: HandRank.fullHouse.rawValue, handValue: trips_v * 100 + pair_v)
+                let hind = tripVal * pairVal
+                if(isAceOne){
+                    let hv = aceToOne(trips_v) * 100 + aceToOne(pair_v)
+                    handDict[hind] = Hand(handRank: HandRank.fullHouse.rawValue, handValue: hv)
+                }else{
+                    handDict[hind] = Hand(handRank: HandRank.fullHouse.rawValue, handValue: trips_v * 100 + pair_v)
+                }
             }
             for kicker1 in 2...13{
                 if(trips_v == kicker1){
@@ -56,8 +77,13 @@ final public class CardRankStore{
                         continue
                     }
                     // kicker1 < kicker2
-                    let handVal = tripVal * cardPrimes[kicker1] * cardPrimes[kicker2]
-                    pokerHandDictNoFlash[handVal] = Hand(handRank: HandRank.trips.rawValue, handValue: trips_v * 10000 + kicker2 * 100 + kicker1)
+                    let hind = tripVal * cardPrimes[kicker1] * cardPrimes[kicker2]
+                    if(isAceOne){
+                        let hv = aceToOne(trips_v) * 10000 + aceToOne(kicker2) * 100 + aceToOne(kicker1)
+                        handDict[hind] = Hand(handRank: HandRank.trips.rawValue, handValue: hv)
+                    }else{
+                        handDict[hind] = Hand(handRank: HandRank.trips.rawValue, handValue: trips_v * 10000 + kicker2 * 100 + kicker1)
+                    }
                 }
             }
         }
@@ -73,8 +99,13 @@ final public class CardRankStore{
                     if(pair1 == kicker || pair2 == kicker){
                         continue
                     }
-                    let handVal = pairVal * cardPrimes[kicker]
-                    pokerHandDictNoFlash[handVal] = Hand(handRank: HandRank.twoPair.rawValue, handValue: pair2 * 10000 + pair1 * 100 + kicker)
+                    let hind = pairVal * cardPrimes[kicker]
+                    if(isAceOne){
+                        let hv = aceToOne(pair2) * 10000 + aceToOne(pair1) * 100 + aceToOne(kicker)
+                        handDict[hind] = Hand(handRank: HandRank.twoPair.rawValue, handValue: hv)
+                    }else{
+                        handDict[hind] = Hand(handRank: HandRank.twoPair.rawValue, handValue: pair2 * 10000 + pair1 * 100 + kicker)
+                    }
                 }
             }
         }
@@ -91,18 +122,44 @@ final public class CardRankStore{
                         continue
                     }
                     let pairVal3 = pairVal2 * cardPrimes[kicker2]
-
                     for kicker3 in kicker2 + 1...14{
                         if(pair == kicker3){
                             continue
                         }
-                        let handVal = pairVal3 * cardPrimes[kicker3]
-                        let hv = pair * 1000000 + kicker1 * 10000 + kicker2 * 100 + kicker3
-                        pokerHandDictNoFlash[handVal] = Hand(handRank: HandRank.onePair.rawValue, handValue: hv)
+                        let hind = pairVal3 * cardPrimes[kicker3]
+                        if(isAceOne){
+                            let hv = aceToOne(pair) * 1000000 + aceToOne(kicker1) * 10000 + aceToOne(kicker2) * 100 + aceToOne(kicker3)
+                            pokerHandDictNoFlash[hind] = Hand(handRank: HandRank.onePair.rawValue, handValue: hv)
+                        }else{
+                            let hv = pair * 1000000 + kicker1 * 10000 + kicker2 * 100 + kicker3
+                            pokerHandDictNoFlash[hind] = Hand(handRank: HandRank.onePair.rawValue, handValue: hv)
+                        }
                     }
                 }
             }
         }
+    }
+    private func makeHandRankDictRazz(){
+        makeHandRankDictPair(handDict: &pokerHandDictRazz, isAceOne: true)
+        let cards = [1,2,3,4,5,6,7,8,9,10,11,12,13]
+        for card in cards.combinations(ofCount: 5){
+            var hind = 1
+            var hvalue = 0
+            for i in 0...4{
+                let ci = card[i]
+                if(ci == 1){
+                    hind *= cardPrimes[14]
+                }else{
+                    hind *= cardPrimes[ci]
+                }
+                hvalue = card[4 - i] + hvalue * 20
+            }
+            pokerHandDictRazz[hind] = Hand(handRank: card[4], handValue: hvalue)
+        }
+    }
+
+    private func makeHandRankDict(){
+        makeHandRankDictPair(handDict: &pokerHandDictNoFlash, isAceOne: false)
         // straight
         for high in 5...14{
             var hv = 1
@@ -132,6 +189,7 @@ final public class CardRankStore{
             pokerHandDictFlash[hv] = Hand(handRank: HandRank.flush.rawValue, handValue: hvalue)
         }
     }
+    
     public func judgePokerHand(cards: [PlayingCard], is27: Bool) -> Hand{
         let c0 = cards[0]
         var isFlash = true
@@ -161,5 +219,17 @@ final public class CardRankStore{
         }else{
             return pokerHandDictNoFlash[hv]!
         }
+    }
+    
+    public func judgeRazzHand(cards: [PlayingCard]) -> Hand{
+        let c0 = cards[0]
+        var hv = cardPrimes[c0.number]
+        for i in 1...4{
+            hv *= cardPrimes[cards[i].number]
+        }
+        if(pokerHandDictRazz[hv] == nil){
+            return Hand(handRank: 0, handValue: 0)
+        }
+        return pokerHandDictRazz[hv]!
     }
 }
