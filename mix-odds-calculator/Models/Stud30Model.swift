@@ -16,34 +16,7 @@ public class Stud30Model: StudModel {
         highName = "Hi"
         lowName = "30"
     }
-    private func judgeHighHand(hand1: Hand, hand2: Hand) -> Int{
-        if hand1.handRank < hand2.handRank{
-            return -1
-        }else if hand1.handRank > hand2.handRank{
-            return 1
-        }else{
-            if hand1.handValue < hand2.handValue{
-                return -1
-            }else if hand1.handValue > hand2.handValue{
-                return 1
-            }else{
-                return 0
-            }
-        }
-    }
-    private func judgeLowHand(hand1: Hand, hand2: Hand) -> Int{
-        return -judgeHighHand(hand1: hand1, hand2: hand2)
-    }
-    private func judgeWinner(win_first: Int, win_second: Int) -> Int{
-        if(win_second == -1){
-            return 4
-        }
-        if(win_first >= 0){
-            return 2 * (1 - win_first) + 4 * (1 - win_second) + 1
-        }else{
-            return 4 * (1 - win_second) + 2
-        }
-    }
+    
     private func to30Num(num: Int) -> Int{
         if(num == 14){
             return 1
