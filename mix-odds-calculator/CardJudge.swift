@@ -88,13 +88,18 @@ public func judgeAceToFiveLow(cards: [PlayingCard]) -> Hand{
 }
 
 public func judge27(cards: [PlayingCard]) -> Hand{
-    return judgePokerHand(cards: cards, aceCanBeOne: false)
+    let rankStore = CardRankStore.shared
+    let hand = rankStore.judgePokerHand(cards: cards, is27: true)
+    return hand
 }
 
 public func judgePokerHigh(cards: [PlayingCard]) -> Hand{
-    return judgePokerHand(cards: cards, aceCanBeOne: true)
+    let rankStore = CardRankStore.shared
+    let hand = rankStore.judgePokerHand(cards: cards, is27: false)
+    return hand
 }
 
+/*
 public func judgePokerHand(cards: [PlayingCard], aceCanBeOne : Bool) -> Hand{
     var numArr : [Int] = []
     for card in cards{
@@ -130,6 +135,7 @@ public func judgePokerHand(cards: [PlayingCard], aceCanBeOne : Bool) -> Hand{
     }
     return Hand(handRank: numArr[4], handValue: calcHandValue(nums: numArr))
 }
+ */
 
 // judge hand for badugi
 private func judgeTri(triCards: [PlayingCard]) -> Hand?{

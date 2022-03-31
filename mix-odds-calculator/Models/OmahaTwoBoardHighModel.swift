@@ -50,6 +50,7 @@ public class OmahaTwoBoardModelHigh: OmahaTwoBoardModel {
         tie_high2_num = 0
         player1_return = 0
     }
+    
     override func judgeResult(player1_cards: [PlayingCard], player2_cards: [PlayingCard], board1_cards: [PlayingCard], board2_cards: [PlayingCard]){
         let hand1_high_1 = judgeHandOmahaType(board: board1_cards, holeCard: player1_cards, judgeMethod: judgePokerHigh, bestlow: false)
         let hand1_high_2 = judgeHandOmahaType(board: board2_cards, holeCard: player1_cards, judgeMethod: judgePokerHigh, bestlow: false)

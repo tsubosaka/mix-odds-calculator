@@ -132,7 +132,7 @@ final public class CardRankStore{
             pokerHandDictFlash[hv] = Hand(handRank: HandRank.flush.rawValue, handValue: hvalue)
         }
     }
-    public func judgePokerHand(cards: [PlayingCard]) -> Hand{
+    public func judgePokerHand(cards: [PlayingCard], is27: Bool) -> Hand{
         let c0 = cards[0]
         var isFlash = true
         var hv = cardPrimes[c0.number]
@@ -141,6 +141,17 @@ final public class CardRankStore{
                 isFlash = false
             }
             hv *= cardPrimes[cards[i].number]
+        }
+        // 27ではA2345はストレートではないのでこれだけ特別処理を行う
+        // 8610 = 2 * 3 * 5 * 7 * 41 // A2345
+        // 2281662 = 20^4 * 14 + 20^3 * 5 + 20^2 * 4 + 20 * 3 + 2
+        if(hv == 8610 && is27){
+            let hvalue = 2281662
+            if(isFlash){
+                return Hand(handRank: HandRank.flush.rawValue, handValue: hvalue)
+            }else{
+                return Hand(handRank: HandRank.highCard.rawValue, handValue: hvalue)
+            }
         }
         if(pokerHandDictNoFlash[hv] == nil){
             return Hand(handRank: 0, handValue: 0)

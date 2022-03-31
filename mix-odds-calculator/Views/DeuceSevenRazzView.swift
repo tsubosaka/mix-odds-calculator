@@ -43,7 +43,7 @@ struct DeuceSevenRazzView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             }
             Button(action: {
-                razzModel.calculateOdds(hand1: hand1, hand2: hand2, hand3: hand3, deadCard: dead, numberOfSimulations: 1000)
+                razzModel.calculateOdds(hand1: hand1, hand2: hand2, hand3: hand3, deadCard: dead, numberOfSimulations: 10000)
             }){
                 Text("計算")
             }.alert(isPresented: $razzModel.isError){

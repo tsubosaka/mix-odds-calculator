@@ -52,7 +52,7 @@ struct OmahaTwoBoadHighView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             }
             Button(action: {
-                omahaModel.calculateOdds(hand1: hand1, hand2: hand2, board1: board1, board2: board2, deadCard: dead, numberOfSimulations: 1000)
+                omahaModel.calculateOdds(hand1: hand1, hand2: hand2, board1: board1, board2: board2, deadCard: dead, numberOfSimulations: 5000)
             }){
                 Text("計算")
             }.alert(isPresented: $omahaModel.isError){
@@ -104,7 +104,7 @@ struct OmahaTwoBoadHighView: View {
                         Spacer()
                     }
                     HStack{
-                        Text(String(omahaModel.simulationNum) + "回シミュレーション結果")
+                        Text(String(omahaModel.simulationNum) + "回シミュレーション結果 " + String(omahaModel.elapseTime))
                         Spacer()
                     }
 

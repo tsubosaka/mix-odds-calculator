@@ -98,6 +98,7 @@ public class OmahaTwoBoardModel: ObservableObject {
         if(!removeCardFromDeck(deck: &deck, cards: dead_arr!)){
             return
         }
+        let start = Date()
         initSimulation()
         for _ in 1...numberOfSimulations{
             deck.shuffle()
@@ -121,8 +122,11 @@ public class OmahaTwoBoardModel: ObservableObject {
         dead_card = deadCard
         simulationNum = numberOfSimulations
         updateResult()
+        let elapsed = Date().timeIntervalSince(start)
+        elapseTime = elapsed
         isCalculated = true
     }
+    @Published var elapseTime = 0.0
     func initSimulation(){
         
     }

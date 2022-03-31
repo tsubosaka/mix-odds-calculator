@@ -39,7 +39,7 @@ public class TestRankObject : ObservableObject{
         }
         let hand1_arr = parsePlayingCard(playingCard: hand1)
         let rankStore = CardRankStore.shared
-        let hand = rankStore.judgePokerHand(cards: hand1_arr!)
+        let hand = rankStore.judgePokerHand(cards: hand1_arr!, is27: true)
         handValue = hand.handValue
         handRank = hand.handRank
         isCalculated = true
