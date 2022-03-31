@@ -128,3 +128,25 @@ public func judgeHandOmahaType(board: [PlayingCard], holeCard: [PlayingCard],
     }
     return bestHand
 }
+
+public func judgeAceToFiveLow(cards: [PlayingCard]) -> Hand{
+    let rankStore = CardRankStore.shared
+    let hand = rankStore.judgeRazzHand(cards: cards)
+    return hand
+}
+
+public func judge27(cards: [PlayingCard]) -> Hand{
+    let rankStore = CardRankStore.shared
+    let hand = rankStore.judgePokerHand(cards: cards, is27: true)
+    return hand
+}
+
+public func judgePokerHigh(cards: [PlayingCard]) -> Hand{
+    let rankStore = CardRankStore.shared
+    let hand = rankStore.judgePokerHand(cards: cards, is27: false)
+    return hand
+}
+
+public func judgeBadugi(cards: [PlayingCard]) -> Hand{
+    return JudgeBadugi.judgeBadugi(cards: cards, is27: false)
+}
