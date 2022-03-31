@@ -11,7 +11,12 @@ struct ContentView: View {
     var body: some View {
         NavigationView{
             List{
-                NavigationLink(destination: DeuceSevenRazzView()){
+                NavigationLink(
+                    destination: StudView(model: StudHighLowModel())){
+                    Text("Stud Hi/Lo").font(.title)
+                }
+                NavigationLink(
+                    destination: StudView(model: DeuceSevenRazzModel())){
                     Text("2-7 Razz").font(.title)
                 }
                 NavigationLink(destination: RazzDugiView()){

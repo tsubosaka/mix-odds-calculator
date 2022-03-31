@@ -13,6 +13,9 @@ public class TestRankObject : ObservableObject{
     @Published var isCalculated = false
     @Published var handValue = 0
     @Published var handRank = 0
+    @Published var handValue2 = 0
+    @Published var handRank2 = 0
+
     private func parsePlayingCard(playingCard: String) -> [PlayingCard]?{
         let hand_arr: [String] = playingCard.components(separatedBy: " ")
         var result: [PlayingCard] = []
@@ -42,6 +45,9 @@ public class TestRankObject : ObservableObject{
         let hand = rankStore.judgePokerHand(cards: hand1_arr!, is27: true)
         handValue = hand.handValue
         handRank = hand.handRank
+        let hand2 = rankStore.judgeRazzHand(cards: hand1_arr!)
+        handValue2 = hand2.handValue
+        handRank2 = hand2.handRank
         isCalculated = true
     }
     
@@ -68,6 +74,8 @@ struct TestRankStoreView: View {
             if(model.isCalculated){
                 Text("rank: " + String(model.handRank))
                 Text("value: " + String(model.handValue))
+                Text("rank2: " + String(model.handRank2))
+                Text("value2: " + String(model.handValue2))
             }
         }
     }

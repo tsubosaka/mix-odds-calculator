@@ -1,21 +1,25 @@
 //
-//  DeuceSevenRazzView.swift
+//  StudView.swift
 //  mix-odds-calculator
 //
-//  Created by 坪坂正志 on 2021/12/28.
+//  Created by 坪坂正志 on 2022/03/31.
 //
 
 import SwiftUI
 
-struct DeuceSevenRazzView: View {
+struct StudView: View {
     @State private var hand1 = ""
     @State private var hand2 = ""
     @State private var hand3 = ""
     @State private var dead = ""
-    @ObservedObject var razzModel = DeuceSevenRazzModel()
+    @ObservedObject var studModel : StudModel
+    init(model : StudModel){
+        studModel = model
+    }
+
     var body: some View {
         VStack{
-            Text("2-7 Razz odds calculator").font(.title).padding(.bottom)
+            Text(studModel.gameName + " odds calculator").font(.title).padding(.bottom)
             Group{
             HStack{
                 Text("Player1 Hand")
@@ -27,13 +31,13 @@ struct DeuceSevenRazzView: View {
                 Text("Player2 Hand")
                 Spacer()
             }
-            TextField("2d 3h 7c", text: $hand2)
+            TextField("Td Th Tc", text: $hand2)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             HStack{
                 Text("Player3 Hand")
                 Spacer()
             }
-            TextField("2d 3h 7c", text: $hand3)
+            TextField("9d 9h 9c", text: $hand3)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             HStack{
                 Text("Dead Hand")
@@ -43,25 +47,24 @@ struct DeuceSevenRazzView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             }
             Button(action: {
-                razzModel.calculateOdds(hand1: hand1, hand2: hand2, hand3: hand3, deadCard: dead, numberOfSimulations: 10000)
+                studModel.calculateOdds(hand1: hand1, hand2: hand2, hand3: hand3, deadCard: dead, numberOfSimulations: 6000)
             }){
                 Text("計算")
-            }.alert(isPresented: $razzModel.isError){
-                Alert(title: Text("エラー"), message: Text(razzModel.errorMessage),
+            }.alert(isPresented: $studModel.isError){
+                Alert(title: Text("エラー"), message: Text(studModel.errorMessage),
                       dismissButton: .default(Text("OK")))
             }
-            if(razzModel.isCalculated){
-                DeuceSevenRazzResultView(razzModel: razzModel)
+            if(studModel.isCalculated){
+                StudResultView(model: studModel)
             }
         }
         .padding()
+
     }
-    
 }
 
-struct DeuceSevenRazzView_Previews: PreviewProvider {
+struct StudView_Previews: PreviewProvider {
     static var previews: some View {
-        DeuceSevenRazzView()
-.previewInterfaceOrientation(.portraitUpsideDown)
+        StudView(model: StudHighLowModel())
     }
 }

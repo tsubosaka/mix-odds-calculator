@@ -23,7 +23,7 @@ final public class CardRankStore{
         pokerHandDictFlash = [:]
         pokerHandDictRazz = [:]
         makeHandRankDict()
-//        makeHandRankDictRazz()
+        makeHandRankDictRazz()
     }
     private func aceToOne(_ number: Int) -> Int{
         if(number == 14){
@@ -129,10 +129,10 @@ final public class CardRankStore{
                         let hind = pairVal3 * cardPrimes[kicker3]
                         if(isAceOne){
                             let hv = aceToOne(pair) * 1000000 + aceToOne(kicker1) * 10000 + aceToOne(kicker2) * 100 + aceToOne(kicker3)
-                            pokerHandDictNoFlash[hind] = Hand(handRank: HandRank.onePair.rawValue, handValue: hv)
+                            handDict[hind] = Hand(handRank: HandRank.onePair.rawValue, handValue: hv)
                         }else{
                             let hv = pair * 1000000 + kicker1 * 10000 + kicker2 * 100 + kicker3
-                            pokerHandDictNoFlash[hind] = Hand(handRank: HandRank.onePair.rawValue, handValue: hv)
+                            handDict[hind] = Hand(handRank: HandRank.onePair.rawValue, handValue: hv)
                         }
                     }
                 }
