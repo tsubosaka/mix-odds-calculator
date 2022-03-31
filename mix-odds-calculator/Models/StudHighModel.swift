@@ -41,21 +41,6 @@ public class StudHighModel: StudModel {
     }
 
     override func judgeHigh(player1_cards: [PlayingCard], player2_cards: [PlayingCard], player3_cards: [PlayingCard]) -> Int{
-        let player1_hand_high : Hand = judgeHandRazzType(cards: player1_cards, judgeMethod: judgePokerHigh, useCardNum: 5, bestlow: false)
-        let player2_hand_high : Hand = judgeHandRazzType(cards: player2_cards, judgeMethod: judgePokerHigh, useCardNum: 5, bestlow: false)
-        let value_high = judgeHighHand(hand1: player1_hand_high, hand2: player2_hand_high)
-        if(player3_cards.count == 0){
-            if(value_high == 1){
-                return 1
-            }else if(value_high == -1){
-                return 2
-            }else{
-                return 3
-            }
-        }
-        let player3_hand_high : Hand = judgeHandRazzType(cards: player3_cards, judgeMethod: judgePokerHigh, useCardNum: 5, bestlow: false)
-        let value_high2 = value_high >= 0 ? judgeHighHand(hand1: player1_hand_high, hand2: player3_hand_high) :
-                                          judgeHighHand(hand1: player2_hand_high, hand2: player3_hand_high)
-        return judgeWinner(win_first: value_high, win_second: value_high2)
-    }    
+        return UtilStud.judgeStudHigh(player1_cards: player1_cards, player2_cards: player2_cards, player3_cards: player3_cards)
+    }
 }

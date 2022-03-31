@@ -36,10 +36,10 @@ class UtilStud{
             return 4 * (1 - win_second) + 2
         }
     }
-
-    class func judgeRazz(player1_cards: [PlayingCard], player2_cards: [PlayingCard], player3_cards: [PlayingCard]) -> Int{
-        let player1_hand_low : Hand = judgeHandRazzType(cards: player1_cards, judgeMethod: judgeAceToFiveLow, useCardNum: 5, bestlow: true)
-        let player2_hand_low : Hand = judgeHandRazzType(cards: player2_cards, judgeMethod: judgeAceToFiveLow, useCardNum: 5, bestlow: true)
+    
+    private class func judgeLowGame(player1_cards: [PlayingCard], player2_cards: [PlayingCard], player3_cards: [PlayingCard], cardNum: Int, judgeMethod: (([PlayingCard]) -> Hand)) -> Int{
+        let player1_hand_low : Hand = judgeHandRazzType(cards: player1_cards, judgeMethod: judgeMethod, useCardNum: cardNum, bestlow: true)
+        let player2_hand_low : Hand = judgeHandRazzType(cards: player2_cards, judgeMethod: judgeMethod, useCardNum: 5, bestlow: true)
         let value_low = judgeLowHand(hand1: player1_hand_low, hand2: player2_hand_low)
         if(player3_cards.count == 0){
             if(value_low == 1){
@@ -50,29 +50,21 @@ class UtilStud{
                 return 3
             }
         }
-        let player3_hand_low : Hand = judgeHandRazzType(cards: player3_cards, judgeMethod: judgeAceToFiveLow, useCardNum: 5, bestlow: true)
+        let player3_hand_low : Hand = judgeHandRazzType(cards: player3_cards, judgeMethod: judgeMethod, useCardNum: cardNum, bestlow: true)
         let value_low2 = value_low >= 0 ? judgeLowHand(hand1: player1_hand_low, hand2: player3_hand_low) :
                                           judgeLowHand(hand1: player2_hand_low, hand2: player3_hand_low)
         return judgeWinner(win_first: value_low, win_second: value_low2)
+    }
+    class func judgeRazz(player1_cards: [PlayingCard], player2_cards: [PlayingCard], player3_cards: [PlayingCard]) -> Int{
+        return judgeLowGame(player1_cards: player1_cards, player2_cards: player2_cards, player3_cards: player3_cards, cardNum: 5, judgeMethod: judgeAceToFiveLow)
     }
     class func judge27Razz(player1_cards: [PlayingCard], player2_cards: [PlayingCard], player3_cards: [PlayingCard]) -> Int{
-        let player1_hand_low : Hand = judgeHandRazzType(cards: player1_cards, judgeMethod: judge27, useCardNum: 5, bestlow: true)
-        let player2_hand_low : Hand = judgeHandRazzType(cards: player2_cards, judgeMethod: judge27, useCardNum: 5, bestlow: true)
-        let value_low = judgeLowHand(hand1: player1_hand_low, hand2: player2_hand_low)
-        if(player3_cards.count == 0){
-            if(value_low == 1){
-                return 1
-            }else if(value_low == -1){
-                return 2
-            }else{
-                return 3
-            }
-        }
-        let player3_hand_low : Hand = judgeHandRazzType(cards: player3_cards, judgeMethod: judge27, useCardNum: 5, bestlow: true)
-        let value_low2 = value_low >= 0 ? judgeLowHand(hand1: player1_hand_low, hand2: player3_hand_low) :
-                                          judgeLowHand(hand1: player2_hand_low, hand2: player3_hand_low)
-        return judgeWinner(win_first: value_low, win_second: value_low2)
+        return judgeLowGame(player1_cards: player1_cards, player2_cards: player2_cards, player3_cards: player3_cards, cardNum: 5, judgeMethod: judge27)
     }
+    class func judgeStudBadugi(player1_cards: [PlayingCard], player2_cards: [PlayingCard], player3_cards: [PlayingCard]) -> Int{
+        return judgeLowGame(player1_cards: player1_cards, player2_cards: player2_cards, player3_cards: player3_cards, cardNum: 4, judgeMethod: judgeBadugi)
+    }
+
     class func judgeStudHigh(player1_cards: [PlayingCard], player2_cards: [PlayingCard], player3_cards: [PlayingCard]) -> Int{
         let player1_hand_high : Hand = judgeHandRazzType(cards: player1_cards, judgeMethod: judgePokerHigh, useCardNum: 5, bestlow: false)
         let player2_hand_high : Hand = judgeHandRazzType(cards: player2_cards, judgeMethod: judgePokerHigh, useCardNum: 5, bestlow: false)
@@ -87,8 +79,7 @@ class UtilStud{
             }
         }
         let player3_hand_high : Hand = judgeHandRazzType(cards: player3_cards, judgeMethod: judgePokerHigh, useCardNum: 5, bestlow: false)
-        let value_high2 = value_high >= 0 ? judgeHighHand(hand1: player1_hand_high, hand2: player3_hand_high) :
-                                          judgeHighHand(hand1: player2_hand_high, hand2: player3_hand_high)
+        let value_high2 = value_high >= 0 ? judgeHighHand(hand1: player1_hand_high, hand2: player3_hand_high) : judgeHighHand(hand1: player2_hand_high, hand2: player3_hand_high)
         return judgeWinner(win_first: value_high, win_second: value_high2)
     }
 }

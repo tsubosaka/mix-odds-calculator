@@ -21,7 +21,7 @@ public class RazzDugiModel: StudModel {
         return UtilStud.judgeRazz(player1_cards: player1_cards, player2_cards: player2_cards, player3_cards: player3_cards)
     }
     override func judgeLow(player1_cards: [PlayingCard], player2_cards: [PlayingCard], player3_cards: [PlayingCard]) -> Int{
-        return UtilStud.judgeRazz(player1_cards: player1_cards, player2_cards: player2_cards, player3_cards: player3_cards)
+        return UtilStud.judgeStudBadugi(player1_cards: player1_cards, player2_cards: player2_cards, player3_cards: player3_cards)
     }
 
 }
