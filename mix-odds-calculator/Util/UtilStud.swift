@@ -64,6 +64,9 @@ class UtilStud{
     class func judgeStudBadugi(player1_cards: [PlayingCard], player2_cards: [PlayingCard], player3_cards: [PlayingCard]) -> Int{
         return judgeLowGame(player1_cards: player1_cards, player2_cards: player2_cards, player3_cards: player3_cards, cardNum: 4, judgeMethod: judgeBadugi)
     }
+    class func judgeStudBadugi27(player1_cards: [PlayingCard], player2_cards: [PlayingCard], player3_cards: [PlayingCard]) -> Int{
+        return judgeLowGame(player1_cards: player1_cards, player2_cards: player2_cards, player3_cards: player3_cards, cardNum: 4, judgeMethod: judgeBadugi27)
+    }
 
     class func judgeStudHigh(player1_cards: [PlayingCard], player2_cards: [PlayingCard], player3_cards: [PlayingCard]) -> Int{
         let player1_hand_high : Hand = judgeHandRazzType(cards: player1_cards, judgeMethod: judgePokerHigh, useCardNum: 5, bestlow: false)

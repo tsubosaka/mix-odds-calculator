@@ -9,13 +9,10 @@
 * Stud Hi/Lo
 * 2-7 Razz
 * Razzdugi
+* Razzdeucy (2-5/2-7)
 * Stud 30
 * Double board Omaha Hi
 * Double board Omaha Hi/Lo Best/Best
-
-## 今後対応予定のゲーム
-
-* Razzdeucy (2-5/2-7)
 
 ## ひょっとしたら対応
 

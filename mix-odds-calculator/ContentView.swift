@@ -32,6 +32,10 @@ struct ContentView: View {
                     Text("Razz dugi").font(.title)
                 }
                 NavigationLink(
+                    destination: StudView(model: RazzDeucyModel())){
+                    Text("Razz deucy").font(.title)
+                }
+                NavigationLink(
                     destination: StudView(model: Stud30Model())){
                     Text("Stud30").font(.title)
                 }

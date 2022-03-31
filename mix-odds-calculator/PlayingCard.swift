@@ -150,3 +150,7 @@ public func judgePokerHigh(cards: [PlayingCard]) -> Hand{
 public func judgeBadugi(cards: [PlayingCard]) -> Hand{
     return JudgeBadugi.judgeBadugi(cards: cards, is27: false)
 }
+
+public func judgeBadugi27(cards: [PlayingCard]) -> Hand{
+    return JudgeBadugi.judgeBadugi(cards: cards, is27: true)
+}
