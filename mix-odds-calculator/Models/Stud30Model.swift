@@ -8,24 +8,15 @@
 import Foundation
 
 
-public class Stud30Model: StudTypeModel {
-    @Published var win1_high = 0
-    @Published var win1_30 = 0
-    @Published var win2_high = 0
-    @Published var win2_30 = 0
-    @Published var tie1_high = 0
-    @Published var tie1_30 = 0
-    @Published var exp_player1 = 0.0
-    private var win_player_1_high = 0
-    private var win_player_1_30 = 0
-    private var win_player_2_high = 0
-    private var win_player_2_30 = 0
-    private var tie_player_1_high = 0
-    private var tie_player_1_30 = 0
-    private var tie_player_2_high = 0
-    private var tie_player_2_30 = 0
-
-    private func judge(hand1: Hand, hand2: Hand) -> Int{
+public class Stud30Model: StudModel {
+    override init(){
+        super.init()
+        isSplitGame = true
+        gameName = "Stud 30"
+        highName = "Hi"
+        lowName = "30"
+    }
+    private func judgeHighHand(hand1: Hand, hand2: Hand) -> Int{
         if hand1.handRank < hand2.handRank{
             return -1
         }else if hand1.handRank > hand2.handRank{
@@ -40,17 +31,20 @@ public class Stud30Model: StudTypeModel {
             }
         }
     }
-    override func initSimulation(){
-        win_player_1_high = 0
-        win_player_1_30 = 0
-        win_player_2_high = 0
-        win_player_2_30 = 0
-        tie_player_1_high = 0
-        tie_player_1_30 = 0
-        tie_player_2_high = 0
-        tie_player_2_30 = 0
+    private func judgeLowHand(hand1: Hand, hand2: Hand) -> Int{
+        return -judgeHighHand(hand1: hand1, hand2: hand2)
     }
-    func to30Num(num: Int) -> Int{
+    private func judgeWinner(win_first: Int, win_second: Int) -> Int{
+        if(win_second == -1){
+            return 4
+        }
+        if(win_first >= 0){
+            return 2 * (1 - win_first) + 4 * (1 - win_second) + 1
+        }else{
+            return 4 * (1 - win_second) + 2
+        }
+    }
+    private func to30Num(num: Int) -> Int{
         if(num == 14){
             return 1
         }
@@ -59,43 +53,51 @@ public class Stud30Model: StudTypeModel {
         }
         return num
     }
-    func calcValue30(player_cards: [PlayingCard]) -> Int{
+    private func calcValue30(_ player_cards: [PlayingCard]) -> Int{
         let result =
         to30Num(num: player_cards[0].number) + to30Num(num: player_cards[1].number) + to30Num(num: player_cards[6].number)
         return result
     }
-    
-    override func judgeResult(player1_cards: [PlayingCard], player2_cards: [PlayingCard]){
+    override func judgeHigh(player1_cards: [PlayingCard], player2_cards: [PlayingCard], player3_cards: [PlayingCard]) -> Int{
         let player1_hand_high : Hand = judgeHandRazzType(cards: player1_cards, judgeMethod: judgePokerHigh, useCardNum: 5, bestlow: false)
         let player2_hand_high : Hand = judgeHandRazzType(cards: player2_cards, judgeMethod: judgePokerHigh, useCardNum: 5, bestlow: false)
-        let value_high = judge(hand1: player1_hand_high, hand2: player2_hand_high)
-        if value_high == 1{
-            win_player_1_high += 1
-        }else if value_high == -1{
-            win_player_2_high += 1
-        }else{
-            tie_player_1_high += 1
-            tie_player_2_high += 1
+        let value_high = judgeHighHand(hand1: player1_hand_high, hand2: player2_hand_high)
+        if(player3_cards.count == 0){
+            if(value_high == 1){
+                return 1
+            }else if(value_high == -1){
+                return 2
+            }else{
+                return 3
+            }
         }
-        let player1_30 = calcValue30(player_cards: player1_cards)
-        let player2_30 = calcValue30(player_cards: player2_cards)
-        if player1_30 > player2_30{
-            win_player_1_30 += 1
-        }else if player1_30 < player2_30{
-            win_player_2_30 += 1
-        }else{
-            tie_player_1_30 += 1
-            tie_player_2_30 += 1
-        }
+        let player3_hand_high : Hand = judgeHandRazzType(cards: player3_cards, judgeMethod: judgePokerHigh, useCardNum: 5, bestlow: false)
+        let value_high2 = value_high >= 0 ? judgeHighHand(hand1: player1_hand_high, hand2: player3_hand_high) :
+                                          judgeHighHand(hand1: player2_hand_high, hand2: player3_hand_high)
+        return judgeWinner(win_first: value_high, win_second: value_high2)
     }
-    override func updateResult(){
-        win1_high = win_player_1_high
-        win2_high = win_player_2_high
-        win1_30 = win_player_1_30
-        win2_30 = win_player_2_30
-        tie1_high = tie_player_1_high
-        tie1_30 = tie_player_1_30
-        let exp_value = Double(win1_high - win2_high + win1_30 - win2_30) / Double(simulationNum * 2)
-        exp_player1 = exp_value
+    
+    override func judgeLow(player1_cards: [PlayingCard], player2_cards: [PlayingCard], player3_cards: [PlayingCard]) -> Int{
+        let player1_hand_30 : Int = calcValue30(player1_cards)
+        let player2_hand_30 : Int = calcValue30(player2_cards)
+        if(player3_cards.count == 0){
+            if(player1_hand_30 > player2_hand_30){
+                return 1
+            }else if(player1_hand_30 < player2_hand_30){
+                return 2
+            }else{
+                return 3
+            }
+        }
+        let player3_hand_30 : Int = calcValue30(player3_cards)
+        let arr = [player1_hand_30, player2_hand_30, player3_hand_30]
+        let max30 = max(player1_hand_30, player2_hand_30, player3_hand_30)
+        var result = 0
+        for i in 0...2{
+            if(arr[i] == max30){
+                result += 1 << i
+            }
+        }
+        return result
     }
 }
